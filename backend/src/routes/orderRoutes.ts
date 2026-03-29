@@ -1,0 +1,24 @@
+import express from "express";
+import {
+  createOrder,
+  getUserOrders,
+  getCookOrders,
+  acceptOrder,
+  rejectOrder,
+} from "../controllers/orderController.js";
+
+import { protect } from "../middleware/authMiddleware.js";
+import roleMiddleware from "../middleware/roleMiddleware.js";
+
+const router = express.Router();
+
+// 👤 User routes
+router.post("/", protect, roleMiddleware("user"), createOrder);
+router.get("/my-orders", protect, roleMiddleware("user"), getUserOrders);
+
+// 👨‍🍳 Cook routes
+router.get("/cook-orders", protect, roleMiddleware("cook"), getCookOrders);
+router.put("/:id/accept", protect, roleMiddleware("cook"), acceptOrder);
+router.put("/:id/reject", protect, roleMiddleware("cook"), rejectOrder);
+
+export default router;

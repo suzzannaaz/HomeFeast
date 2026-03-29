@@ -11,13 +11,14 @@ export const protect = (
   res: Response,
   next: NextFunction
 ) => {
-  let token = req.headers.authorization;
 
-  if (!token) {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
     return res.status(401).json({ message: "No token, access denied" });
   }
 
-  token = token.split(" ")[1];
+  const token = authHeader.split(" ")[1];
 
   try {
     const decoded = jwt.verify(
@@ -25,7 +26,8 @@ export const protect = (
       process.env.JWT_SECRET as string
     ) as JwtPayload;
 
-    (req as any).user = decoded;
+    req.user = decoded;   // ✅ clean TypeScript-safe assignment
+
     next();
   } catch {
     res.status(401).json({ message: "Invalid token" });
