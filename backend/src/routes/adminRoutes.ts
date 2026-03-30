@@ -2,7 +2,12 @@ import { Router } from "express";
 import {
   getAllCooks,
   approveCook,
-  rejectCook
+  rejectCook,
+  getAllUsers,
+  deleteUser,
+  toggleBlockUser,
+  getAllOrders,
+  getOrdersByStatus,
 } from "../controllers/adminController.js";
 
 import { protect } from "../middleware/authMiddleware.js";
@@ -26,5 +31,16 @@ router.put(
   roleMiddleware("admin"),
   rejectCook
 );
+
+
+// ✅ USERS
+router.get("/users", protect, roleMiddleware("admin"), getAllUsers);
+router.delete("/users/:id", protect, roleMiddleware("admin"), deleteUser);
+router.put("/users/:id/block", protect, roleMiddleware("admin"), toggleBlockUser);
+
+// ✅ ORDERS
+router.get("/orders", protect, roleMiddleware("admin"), getAllOrders);
+router.get("/orders/:status", protect, roleMiddleware("admin"), getOrdersByStatus);
+
 
 export default router;

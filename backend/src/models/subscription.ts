@@ -1,17 +1,18 @@
 import mongoose, { Document, Schema } from "mongoose";
-// import { IUser } from "../models/user.js";
 
-export interface IOrder extends Document {
+export interface ISubscription extends Document {
   user: mongoose.Types.ObjectId;
   cook: mongoose.Types.ObjectId;
   planType: "daily" | "weekly" | "monthly";
-  status: "pending" | "accepted" | "rejected" | "delivered" | "cancelled";
+  startDate: Date;
+  endDate: Date;
   deliveryTime: string;
+  status: "active" | "paused" | "cancelled";
   createdAt: Date;
   updatedAt: Date;
 }
 
-const orderSchema = new Schema<IOrder>(
+const subscriptionSchema = new Schema<ISubscription>(
   {
     user: {
       type: Schema.Types.ObjectId,
@@ -28,17 +29,28 @@ const orderSchema = new Schema<IOrder>(
       enum: ["daily", "weekly", "monthly"],
       required: true,
     },
-    status: {
-      type: String,
-      enum: ["pending", "accepted", "rejected", "delivered", "cancelled"],
-      default: "pending",
+    startDate: {
+      type: Date,
+      required: true,
+    },
+    endDate: {
+      type: Date,
+      required: true,
     },
     deliveryTime: {
       type: String,
       required: true,
     },
+    status: {
+      type: String,
+      enum: ["active", "paused", "cancelled"],
+      default: "active",
+    },
   },
   { timestamps: true }
 );
 
-export default mongoose.model<IOrder>("Order", orderSchema);
+export default mongoose.model<ISubscription>(
+  "Subscription",
+  subscriptionSchema
+);

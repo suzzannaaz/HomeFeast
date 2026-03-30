@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import User from "../models/user.js";
+import CookProfile from "../models/cookProfile.js";
 
 // REGISTER
 export const register = async (req: Request, res: Response) => {
@@ -22,6 +23,16 @@ export const register = async (req: Request, res: Response) => {
       role
     });
 
+     // 2. If role is cook → create cook profile
+  if (role === "cook") {
+    await CookProfile.create({
+      user: user._id,
+      bio: "", // or take from req.body
+      serviceArea: "",
+      deliveryTime: "",
+      cuisines: []
+    });
+  }
     res.status(201).json({ message: "User registered", user });
   } catch (err: any) {
     res.status(500).json({ message: err.message });

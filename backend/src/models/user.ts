@@ -6,6 +6,7 @@ export interface IUser extends Document {
   password: string;
   role: "user" | "cook" | "admin";
   location?: string;
+  isBlocked: boolean;
 }
 
 const userSchema = new Schema<IUser>(
@@ -18,9 +19,12 @@ const userSchema = new Schema<IUser>(
       enum: ["user", "cook", "admin"],
       default: "user"
     },
-    location: String
+    location: String,
+    isBlocked: { type: Boolean, default: false }
   },
-  { timestamps: true }
+  
+
+  { timestamps: true },
 );
 
 export default mongoose.model<IUser>("User", userSchema);

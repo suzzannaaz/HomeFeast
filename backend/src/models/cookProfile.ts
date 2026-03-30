@@ -19,10 +19,10 @@ const CookProfileSchema = new Schema<ICookProfile>(
       required: true,
       unique: true
     },
-    bio: String,
+    bio: { type: String, required: true },
     serviceArea: { type: String, required: true },
     deliveryTime: { type: String, required: true },
-    cuisines: [String],
+    cuisines: { type: [String], required: true },
 
     rating: {
       type: Number,

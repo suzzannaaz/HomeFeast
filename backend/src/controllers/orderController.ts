@@ -88,3 +88,26 @@ export const rejectOrder = async (req: Request, res: Response) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+export const markAsDelivered = async (req: Request, res: Response) => {
+  try {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Only the assigned cook can mark delivered
+    if (order.cook.toString() !== req.user?.id) {
+      return res.status(403).json({ message: "Not allowed" });
+    }
+
+    order.status = "delivered";
+    await order.save();
+
+    res.json(order);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
