@@ -13,6 +13,24 @@ export const getAvailableCooks = async (_req: Request, res: Response) => {
   res.json(cooks);
 };
 
+// Get a single cook by ID
+export const getCookById = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    const cook = await CookProfile.findById(id).populate("user", "name location");
+
+    if (!cook) {
+      return res.status(404).json({ message: "Cook not found" });
+    }
+
+    res.json(cook);
+  } catch (err: any) {
+    console.error(err);
+    res.status(500).json({ message: err.message || "Server error" });
+  }
+};
+
 //get user profile
 export const getMyProfile = async (req: Request, res: Response) => {
   try {
