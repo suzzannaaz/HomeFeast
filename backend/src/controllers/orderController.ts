@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import Order from "../models/order.js";
 
+
 // ➕ User places order
 export const createOrder = async (req: Request, res: Response) => {
   try {
@@ -24,11 +25,35 @@ export const createOrder = async (req: Request, res: Response) => {
 export const getUserOrders = async (req: Request, res: Response) => {
   try {
     const orders = await Order.find({ user: req.user?.id })
-      .populate("cook", "name");
-
+      .populate("cook", "name")
+      //  console.log("POPULATED ORDERS:", JSON.stringify(orders, null, 2));
     res.json(orders);
   } catch (error: any) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+
+//user cancel order
+export const cancelOrder = async (req: Request, res: Response) => {
+  try {
+    const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Only owner can cancel
+    if (order.user.toString() !== req.user?.id) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    order.status = "cancelled";
+    await order.save();
+
+    res.json({ message: "Order cancelled", order });
+  } catch (err: any) {
+    res.status(500).json({ message: err.message });
   }
 };
 
