@@ -7,7 +7,7 @@ import {
   rejectOrder,
   markAsDelivered 
 } from "../controllers/orderController.js";
-import { cancelOrder } from "../controllers/userController.js";
+import { cancelOrder } from "../controllers/orderController.js";
 import { protect } from "../middleware/authMiddleware.js";
 import roleMiddleware from "../middleware/roleMiddleware.js";
 

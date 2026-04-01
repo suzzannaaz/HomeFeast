@@ -41,6 +41,17 @@ export const getMenuById = async (req: Request, res: Response) => {
   }
 };
 
+// ✅ Get menus by cook
+export const getMenusByCook = async (req: Request, res: Response) => {
+  try {
+    const menus = await Menu.find({ cook: req.params.cookId });
+
+    res.json(menus);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 //  Update Menu
 export const updateMenu = async (req: Request, res: Response) => {
   try {
