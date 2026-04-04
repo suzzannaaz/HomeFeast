@@ -7,6 +7,7 @@ export interface IOrder extends Document {
   planType: "daily" | "weekly" | "monthly";
   status: "pending" | "accepted" | "rejected" | "delivered" | "cancelled";
   deliveryTime: string;
+  date: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -20,7 +21,7 @@ const orderSchema = new Schema<IOrder>(
     },
     cook: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "CookProfile",
       required: true,
     },
     planType: {
@@ -37,6 +38,10 @@ const orderSchema = new Schema<IOrder>(
       type: String,
       required: true,
     },
+    date: {
+      type: Date,
+      required: true
+}
   },
   { timestamps: true }
 );

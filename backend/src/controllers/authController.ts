@@ -23,17 +23,17 @@ export const register = async (req: Request, res: Response) => {
       role
     });
 
-     // 2. If role is cook → create cook profile
-  if (role === "cook") {
-    await CookProfile.create({
-      user: user._id,
-      bio: "", // or take from req.body
-      serviceArea: "",
-      deliveryTime: "",
-      cuisines: []
-    });
-  }
-    res.status(201).json({ message: "User registered", user });
+    const token = jwt.sign(
+  { id: user._id, role: user.role },
+  process.env.JWT_SECRET as string,
+  { expiresIn: "7d" }
+);
+
+res.status(201).json({
+  message: "User registered",
+  user,
+  token, // ✅ VERY IMPORTANT
+});
   } catch (err: any) {
     res.status(500).json({ message: err.message });
   }
@@ -61,3 +61,15 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+
+   // 2. If role is cook → create cook profile
+  // if (role === "cook") {
+  //   await CookProfile.create({
+  //     user: user._id,
+  //     bio: "", // or take from req.body
+  //     serviceArea: "",
+  //     deliveryTime: "",
+  //     cuisines: []
+  //   });
+  // }

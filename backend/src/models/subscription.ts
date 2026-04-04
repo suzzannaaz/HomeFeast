@@ -7,7 +7,8 @@ export interface ISubscription extends Document {
   startDate: Date;
   endDate: Date;
   deliveryTime: string;
-  status: "active" | "paused" | "cancelled";
+  status: "pending" |"active" | "paused" | "cancelled" | "rejected";
+  pausedAt?: Date;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -21,7 +22,7 @@ const subscriptionSchema = new Schema<ISubscription>(
     },
     cook: {
       type: Schema.Types.ObjectId,
-      ref: "User",
+      ref: "CookProfile",
       required: true,
     },
     planType: {
@@ -43,8 +44,12 @@ const subscriptionSchema = new Schema<ISubscription>(
     },
     status: {
       type: String,
-      enum: ["active", "paused", "cancelled"],
-      default: "active",
+      enum: ["pending", "active", "paused", "cancelled", "rejected"],
+      default: "pending",
+    },
+    pausedAt: { // <--- Add this
+      type: Date,
+      default: null
     },
   },
   { timestamps: true }

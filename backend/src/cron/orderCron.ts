@@ -3,39 +3,59 @@ import Subscription from "../models/subscription.js";
 import Order from "../models/order.js";
 import { createNotification } from "../utils/createNotification.js";
 
-cron.schedule("* * * * *", async () => {
-  console.log("⏰ Running job...");
+cron.schedule("0 6 * * *", async () => {
+  console.log("⏰ Running daily order job...");
 
-  const today = new Date();
+  try {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // normalize time
 
-  const subs = await Subscription.find({
-    status: "active",
-    startDate: { $lte: today },
-    endDate: { $gte: today },
-  });
-
-  for (const sub of subs) {
-    const order = await Order.create({
-      user: sub.user,
-      cook: sub.cook,
-      planType: sub.planType,
-      deliveryTime: sub.deliveryTime,
+    // ✅ Get active subscriptions
+    const subs = await Subscription.find({
+      status: "active",
+      startDate: { $lte: today },
+      endDate: { $gte: today },
     });
 
-    // 🔔 Notify USER
-    await createNotification(
-      sub.user.toString(),
-      "Your meal order has been placed 🍽️",
-      "order"
-    );
+    for (const sub of subs) {
+      // ✅ Check if today's order already exists
+      const existingOrder = await Order.findOne({
+        user: sub.user,
+        cook: sub.cook,
+        date: today,
+      });
 
-    // 🔔 Notify COOK
-    await createNotification(
-      sub.cook.toString(),
-      "New order received 👨‍🍳",
-      "order"
-    );
+      if (existingOrder) {
+        console.log(`⏭ Order already exists for ${sub.user}`);
+        continue;
+      }
+
+      // ✅ Create new order
+      await Order.create({
+        user: sub.user,
+        cook: sub.cook,
+        planType: sub.planType,
+        deliveryTime: sub.deliveryTime,
+        date: today,
+      });
+
+      // 🔔 Notify USER
+      await createNotification(
+        sub.user.toString(),
+        "Your meal order has been placed 🍽️",
+        "order"
+      );
+
+      // 🔔 Notify COOK
+      await createNotification(
+        sub.cook.toString(),
+        "New order received 👨‍🍳",
+        "order"
+      );
+    }
+
+    console.log("✅ Daily job completed");
+  } catch (error) {
+    console.error("❌ Cron error:", error);
   }
-
-  console.log("✅ Done");
 });

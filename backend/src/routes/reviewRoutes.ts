@@ -1,8 +1,9 @@
 import express from "express";
 import {
   createReview,
-  getCookReviews,
-  getCookRating,
+  getMyCookReviews,
+  getMyCookRating,
+  getReviewedOrderIds,
 } from "../controllers/reviewController.js";
 
 import { protect } from "../middleware/authMiddleware.js";
@@ -12,11 +13,9 @@ const router = express.Router();
 
 // 👤 User adds review
 router.post("/", protect, roleMiddleware("user"), createReview);
+router.get("/my-reviewed-orders", protect, getReviewedOrderIds);
 
-// 📋 Get all reviews of a cook
-router.get("/:cookId", getCookReviews);
-
-// ⭐ Get rating summary
-router.get("/:cookId/rating", getCookRating);
+router.get("/my-reviews", protect, getMyCookReviews);
+router.get("/my-rating", protect, getMyCookRating);
 
 export default router;

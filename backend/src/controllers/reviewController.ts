@@ -2,64 +2,90 @@ import mongoose from "mongoose";
 import { Request, Response } from "express";
 import Review from "../models/review.js";
 import Order from "../models/order.js";
+import CookProfile from "../models/cookProfile.js";
 
-// ➕ Create Review
+
+// ➕ Create / Update Review
 export const createReview = async (req: Request, res: Response) => {
   try {
-    const { cook, rating, comment } = req.body;
+    const { rating, comment, order } = req.body;
 
-    // ✅ Validate cook ID
-    if (!mongoose.Types.ObjectId.isValid(cook)) {
-      return res.status(400).json({ message: "Invalid cook ID" });
+    if (!mongoose.Types.ObjectId.isValid(order)) {
+      return res.status(400).json({ message: "Invalid order ID" });
     }
 
-    // ✅ Validate rating
     if (rating < 1 || rating > 5) {
-      return res.status(400).json({
-        message: "Rating must be between 1 and 5",
-      });
+      return res.status(400).json({ message: "Rating must be between 1 and 5" });
     }
 
-    // ✅ Check if user ordered
-    const hasOrdered = await Order.findOne({
+    const foundOrder = await Order.findById(order);
+    if (!foundOrder) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    if (foundOrder.user.toString() !== req.user?.id) {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
+
+    if (foundOrder.status !== "delivered") {
+      return res.status(400).json({ message: "Review only after delivery" });
+    }
+
+    let review = await Review.findOne({
       user: req.user?.id,
-      cook,
-      status: "delivered",
+      order,
     });
 
-    if (!hasOrdered) {
-      return res.status(403).json({
-        message: "You can review only after receiving the order",
-      });
+    // ✅ UPDATE
+    if (review) {
+      review.rating = rating;
+      review.comment = comment;
+      review.cook = foundOrder.cook; // ✅ DIRECT
+
+      await review.save();
+      return res.json({ message: "Review updated", review });
     }
 
-    // ✅ Prevent duplicate review
-    const existing = await Review.findOne({
+    // ✅ CREATE
+    review = await Review.create({
       user: req.user?.id,
-      cook,
-    });
-
-    if (existing) {
-      return res.status(400).json({
-        message: "You already reviewed this cook",
-      });
-    }
-
-    const review = await Review.create({
-      user: req.user?.id,
-      cook,
+      cook: foundOrder.cook, // ✅ DIRECT
+      order,
       rating,
       comment,
     });
 
-    res.status(201).json(review);
+    res.status(201).json({ message: "Review created", review });
+
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }
 };
 
-// 📋 Get Reviews for a Cook
-export const getCookReviews = async (req: Request, res: Response) => {
+
+// 📋 Get reviews for logged-in cook
+export const getMyCookReviews = async (req: Request, res: Response) => {
+  try {
+    const cookProfile = await CookProfile.findOne({
+      user: req.user?.id,
+    });
+
+    if (!cookProfile) {
+      return res.status(404).json({ message: "Cook profile not found" });
+    }
+
+    const reviews = await Review.find({
+      cook: cookProfile._id,
+    }).populate("user", "name");
+
+    res.json(reviews);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// 📋 Get reviews for a cook (public view)
+export const getCookReviewsById = async (req: Request, res: Response) => {
   try {
     const reviews = await Review.find({
       cook: req.params.cookId,
@@ -71,13 +97,20 @@ export const getCookReviews = async (req: Request, res: Response) => {
   }
 };
 
-// ⭐ Get Average Rating
-export const getCookRating = async (req: Request, res: Response) => {
+
+// ⭐ Get average rating
+export const getMyCookRating = async (req: Request, res: Response) => {
   try {
-    const cookId = req.params.cookId as string;
+    const cookProfile = await CookProfile.findOne({
+      user: req.user?.id,
+    });
+
+    if (!cookProfile) {
+      return res.status(404).json({ message: "Cook profile not found" });
+    }
 
     const result = await Review.aggregate([
-      { $match: { cook: new mongoose.Types.ObjectId(cookId) } },
+      { $match: { cook: cookProfile._id } },
       {
         $group: {
           _id: "$cook",
@@ -88,6 +121,22 @@ export const getCookRating = async (req: Request, res: Response) => {
     ]);
 
     res.json(result[0] || { avgRating: 0, totalReviews: 0 });
+
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+// 📋 Get reviewed order IDs (for frontend)
+export const getReviewedOrderIds = async (req: Request, res: Response) => {
+  try {
+    const reviews = await Review.find({ user: req.user?.id }).select("order");
+
+    const reviewedIds = reviews.map((rev) => rev.order.toString());
+
+    res.json(reviewedIds);
+
   } catch (error: any) {
     res.status(500).json({ message: error.message });
   }

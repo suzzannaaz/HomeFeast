@@ -30,11 +30,15 @@ export const createCookProfile = async (req: Request, res: Response) => {
       bio: req.body.bio,
       serviceArea: req.body.serviceArea,
       deliveryTime: req.body.deliveryTime,
-      cuisines: req.body.cuisines
+      cuisines: req.body.cuisines,
+      mealType: req.body.mealType,          // ✅ ADD THIS
+      pricePerMeal: req.body.pricePerMeal,  // ✅ ADD THIS
+      availablePlans: req.body.availablePlans // ✅ ADD THIS
     });
 
     res.status(201).json(profile);
-  } catch {
+  } catch(error: any){
+    console.log("CREATE PROFILE ERROR:", error); // 👈 ADD THIS
     res.status(500).json({ message: "Failed to create profile" });
   }
 };
@@ -75,5 +79,62 @@ export const updateCookProfile = async (req: Request, res: Response) => {
     res.json(profile);
   } catch (error) {
     res.status(500).json({ message: "Failed to update profile" });
+  }
+};
+
+
+//filter 
+// controllers/cookController.ts
+export const getFilteredCooks = async (req: Request, res: Response) => {
+  try {
+    const { mealType, minPrice, maxPrice, planType, cuisine, search } = req.query;
+
+    let filter: any = {
+      isApproved: true,
+      isAvailable: true,
+    };
+
+    const isValid = (val: any) =>
+      val !== undefined && val !== null && val !== "";
+
+    // ✅ Meal Type
+    if (isValid(mealType)) {
+      filter.mealType = mealType;
+    }
+
+    // ✅ Price
+    if (isValid(minPrice) || isValid(maxPrice)) {
+      filter.pricePerMeal = {};
+      if (isValid(minPrice)) filter.pricePerMeal.$gte = Number(minPrice);
+      if (isValid(maxPrice)) filter.pricePerMeal.$lte = Number(maxPrice);
+    }
+
+    // ✅ Plan
+    if (isValid(planType)) {
+      filter.availablePlans = { $in: [planType] };
+    }
+
+    // ✅ Cuisine
+    if (isValid(cuisine)) {
+      filter.cuisines = {
+        $elemMatch: { $regex: cuisine, $options: "i" },
+      };
+    }
+
+    // ✅ Search
+    if (isValid(search)) {
+      filter.$or = [
+        { serviceArea: { $regex: search, $options: "i" } },
+        { cuisines: { $elemMatch: { $regex: search, $options: "i" } } },
+      ];
+    }
+
+    console.log("FINAL FILTER:", filter); // 🔍 debug
+
+    const cooks = await CookProfile.find(filter).populate("user", "name");
+
+    res.json(cooks);
+  } catch (error: any) {
+    res.status(500).json({ message: error.message });
   }
 };
