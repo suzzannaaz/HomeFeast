@@ -19,13 +19,17 @@ const app = express();
 
 
 
+// app.use(cors({
+//   origin: [
+//     "https://home-feast.vercel.app",
+//     "https://home-feast-git-main-suzzan-naazs-projects.vercel.app",
+//     "https://home-feast-hv2qxm1hi-suzzan-naazs-projects.vercel.app"
+//   ],
+//   credentials: true
+// }));
+
 app.use(cors({
-  origin: [
-    "https://home-feast.vercel.app",
-    "https://home-feast-git-main-suzzan-naazs-projects.vercel.app",
-    "https://home-feast-hv2qxm1hi-suzzan-naazs-projects.vercel.app"
-  ],
-  credentials: true
+  origin: "*"
 }));
 
 
