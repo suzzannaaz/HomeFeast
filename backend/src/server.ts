@@ -19,23 +19,19 @@ const app = express();
 
 
 
-const allowedOrigins = [
-  "https://home-feast.vercel.app",
-  "https://home-feast-git-main-suzzan-naazs-projects.vercel.app",
-  "https://home-feast-hv2qxm1hi-suzzan-naazs-projects.vercel.app"
-];
-
+// ✅ CORS FIRST
 app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true); // allow Postman/browser direct
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-    return callback(new Error("CORS not allowed"));
-  },
+  origin: [
+    "https://home-feast.vercel.app",
+    "https://home-feast-git-main-suzzan-naazs-projects.vercel.app",
+    "https://home-feast-hv2qxm1hi-suzzan-naazs-projects.vercel.app"
+  ],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
 
+// ✅ Handle preflight
+app.options("*", cors());
 
 
 app.use(express.json());
