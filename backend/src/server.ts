@@ -19,17 +19,14 @@ const app = express();
 
 
 
-// ✅ CORS FIRST
 app.use(cors({
-  origin: 
+  origin: [
     "https://home-feast.vercel.app",
-   
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    "https://home-feast-git-main-suzzan-naazs-projects.vercel.app",
+    "https://home-feast-hv2qxm1hi-suzzan-naazs-projects.vercel.app"
+  ],
   credentials: true
 }));
-
-// ✅ Handle preflight
-app.options("*", cors());
 
 
 app.use(express.json());
