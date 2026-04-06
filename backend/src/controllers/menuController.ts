@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Menu, { IMenu } from "../models/menu.js";
+import Menu, { IMenu } from "../models/menu";
 
 // ➕ Create Menu
 export const createMenu = async (req: Request, res: Response) => {

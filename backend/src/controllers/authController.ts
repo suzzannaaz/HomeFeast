@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import User from "../models/user.js";
-import CookProfile from "../models/cookProfile.js";
+import User from "../models/user";
+
 
 // REGISTER
 export const register = async (req: Request, res: Response) => {

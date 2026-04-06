@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-// import { IUser } from "../models/user.js";
+
 
 export interface IOrder extends Document {
   user: mongoose.Types.ObjectId;

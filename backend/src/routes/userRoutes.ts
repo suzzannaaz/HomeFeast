@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { protect } from "../middleware/authMiddleware.js";
-import { getAvailableCooks, updateProfile, getMyProfile, getCookById } from "../controllers/userController.js";
+import { protect } from "../middleware/authMiddleware";
+import { getAvailableCooks, updateProfile, getMyProfile, getCookById } from "../controllers/userController";
 
 const router = Router();
 

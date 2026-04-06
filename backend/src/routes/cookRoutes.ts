@@ -4,10 +4,10 @@ import {
   getMyCookProfile,
   updateCookProfile,
   getFilteredCooks
-} from "../controllers/cookController.js";
+} from "../controllers/cookController";
 
-import { protect } from "../middleware/authMiddleware.js";
-import roleMiddleware from "../middleware/roleMiddleware.js";
+import { protect } from "../middleware/authMiddleware";
+import roleMiddleware from "../middleware/roleMiddleware";
 
 const router = Router();
 

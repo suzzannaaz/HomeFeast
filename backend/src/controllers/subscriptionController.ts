@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import Subscription from "../models/subscription.js";
-import CookProfile from "../models/cookProfile.js";
+import Subscription from "../models/subscription";
+import CookProfile from "../models/cookProfile";
 
 // ➕ Create Subscription
 export const createSubscription = async (req: Request, res: Response) => {

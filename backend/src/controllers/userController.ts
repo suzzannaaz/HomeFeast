@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import CookProfile from "../models/cookProfile.js";
-import User from "../models/user.js";
-import Order from "../models/order.js";
+import CookProfile from "../models/cookProfile";
+import User from "../models/user";
+
 
 /* Get all approved cooks (for users) */
 export const getAvailableCooks = async (_req: Request, res: Response) => {

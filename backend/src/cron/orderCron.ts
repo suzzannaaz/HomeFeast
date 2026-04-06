@@ -1,6 +1,6 @@
 import cron from "node-cron";
-import Subscription from "../models/subscription.js";
-import Order from "../models/order.js";
+import Subscription from "../models/subscription";
+import Order from "../models/order";
 
 
 cron.schedule("0 6 * * *", async () => {

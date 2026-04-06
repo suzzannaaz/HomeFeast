@@ -4,10 +4,10 @@ import {
   getMyCookReviews,
   getMyCookRating,
   getReviewedOrderIds,
-} from "../controllers/reviewController.js";
+} from "../controllers/reviewController";
 
-import { protect } from "../middleware/authMiddleware.js";
-import roleMiddleware from "../middleware/roleMiddleware.js";
+import { protect } from "../middleware/authMiddleware";
+import roleMiddleware from "../middleware/roleMiddleware";
 
 const router = express.Router();
 

@@ -6,10 +6,10 @@ import {
   acceptOrder,
   rejectOrder,
   markAsDelivered 
-} from "../controllers/orderController.js";
-import { cancelOrder } from "../controllers/orderController.js";
-import { protect } from "../middleware/authMiddleware.js";
-import roleMiddleware from "../middleware/roleMiddleware.js";
+} from "../controllers/orderController";
+import { cancelOrder } from "../controllers/orderController";
+import { protect } from "../middleware/authMiddleware";
+import roleMiddleware from "../middleware/roleMiddleware";
 
 const router = express.Router();
 

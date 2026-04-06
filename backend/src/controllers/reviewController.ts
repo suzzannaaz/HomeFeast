@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import { Request, Response } from "express";
-import Review from "../models/review.js";
-import Order from "../models/order.js";
-import CookProfile from "../models/cookProfile.js";
+import Review from "../models/review";
+import Order from "../models/order";
+import CookProfile from "../models/cookProfile";
 
 
 // ➕ Create / Update Review
