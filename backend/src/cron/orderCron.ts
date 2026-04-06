@@ -1,7 +1,7 @@
 import cron from "node-cron";
 import Subscription from "../models/subscription.js";
 import Order from "../models/order.js";
-import { createNotification } from "../utils/createNotification.js";
+
 
 cron.schedule("0 6 * * *", async () => {
   console.log("⏰ Running daily order job...");
@@ -38,20 +38,6 @@ cron.schedule("0 6 * * *", async () => {
         deliveryTime: sub.deliveryTime,
         date: today,
       });
-
-      // 🔔 Notify USER
-      await createNotification(
-        sub.user.toString(),
-        "Your meal order has been placed 🍽️",
-        "order"
-      );
-
-      // 🔔 Notify COOK
-      await createNotification(
-        sub.cook.toString(),
-        "New order received 👨‍🍳",
-        "order"
-      );
     }
 
     console.log("✅ Daily job completed");

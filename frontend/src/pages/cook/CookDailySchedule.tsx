@@ -100,15 +100,6 @@ export default function CookDailySchedule() {
                         </div>
                       </div>
                     </div>
-
-                    <div className="flex gap-2 w-full md:w-auto">
-                      <Button variant="secondary" size="sm" className="flex-1 md:flex-none">
-                        <MapPin className="h-4 w-4 mr-1" /> Track
-                      </Button>
-                      <Button variant="secondary" size="sm" className="flex-1 md:flex-none">
-                        <Phone className="h-4 w-4" />
-                      </Button>
-                    </div>
                   </div>
                 </div>
               </CardContent>
