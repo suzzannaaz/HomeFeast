@@ -69,32 +69,3 @@ export const updateProfile = async (req: Request, res: Response) => {
   }
 };
 
-// //cancel order
-// export const cancelOrder = async (req: Request, res: Response) => {
-//   try {
-//     const order = await Order.findById(req.params.id);
-
-//     if (!order) {
-//       return res.status(404).json({ message: "Order not found" });
-//     }
-
-//     // Only owner can cancel
-//     if (order.user.toString() !== req.user?.id) {
-//       return res.status(403).json({ message: "Not allowed" });
-//     }
-
-//     // Only if still pending
-//     if (order.status !== "pending") {
-//       return res.status(400).json({
-//         message: "Cannot cancel after order is accepted",
-//       });
-//     }
-
-//     order.status = "rejected"; // or "cancelled" (better if you want)
-//     await order.save();
-
-//     res.json({ message: "Order cancelled", order });
-//   } catch (error: any) {
-//     res.status(500).json({ message: error.message });
-//   }
-// };

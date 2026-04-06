@@ -61,15 +61,3 @@ export const login = async (req: Request, res: Response) => {
     res.status(500).json({ message: err.message });
   }
 };
-
-
-   // 2. If role is cook → create cook profile
-  // if (role === "cook") {
-  //   await CookProfile.create({
-  //     user: user._id,
-  //     bio: "", // or take from req.body
-  //     serviceArea: "",
-  //     deliveryTime: "",
-  //     cuisines: []
-  //   });
-  // }
