@@ -17,11 +17,29 @@ connectDB();
 
 const app = express();
 
+const allowedOrigins = [
+  "https://home-feast-git-main-suzzan-naazs-projects.vercel.app",
+  "https://home-feast-hv2qxm1hi-suzzan-naazs-projects.vercel.app"
+];
+
 app.use(cors({
-  origin: "https://home-feast.vercel.app",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
+  origin: function(origin, callback){
+    if(!origin) return callback(null, true); // allow non-browser requests
+    if(allowedOrigins.indexOf(origin) === -1){
+      const msg = "The CORS policy for this site does not allow access from the specified Origin.";
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }));
+
+// Handle preflight requests
+app.options("*", cors());
+
+
+
 app.use(express.json());
 
 // Routes
