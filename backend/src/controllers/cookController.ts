@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import CookProfile from "../models/cookProfile";
+import CookProfile from "../models/cookProfile.js";
 
 /* CREATE profile */
 export const createCookProfile = async (req: Request, res: Response) => {

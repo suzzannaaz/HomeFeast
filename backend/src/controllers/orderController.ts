@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import Order from "../models/order";
-import CookProfile from "../models/cookProfile";
+import Order from "../models/order.js";
+import CookProfile from "../models/cookProfile.js";
 
 
 // ➕ User places order

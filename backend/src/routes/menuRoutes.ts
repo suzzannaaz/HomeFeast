@@ -6,9 +6,9 @@ import {
   updateMenu,
   deleteMenu,
   getMenusByCook
-} from "../controllers/menuController";
+} from "../controllers/menuController.js";
 
-import { protect } from "../middleware/authMiddleware";
+import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 

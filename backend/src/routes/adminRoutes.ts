@@ -11,9 +11,9 @@ import {
   getAllSubscriptions,
   updateSubscriptionStatus,
   getAdminStats,
-} from "../controllers/adminController";
-import { protect } from "../middleware/authMiddleware";
-import roleMiddleware from "../middleware/roleMiddleware";
+} from "../controllers/adminController.js";
+import { protect } from "../middleware/authMiddleware.js";
+import roleMiddleware from "../middleware/roleMiddleware.js";
 
 const router = Router();
 

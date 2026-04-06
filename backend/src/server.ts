@@ -1,16 +1,16 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import connectDB from "./config/db";
+import connectDB from "./config/db.js";
 import "./cron/orderCron.js";
-import authRoutes from "./routes/authRoutes";
-import cookRoutes from "./routes/cookRoutes";
-import adminRoutes from "./routes/adminRoutes";
-import userRoutes from "./routes/userRoutes";
-import menuRoutes from "./routes/menuRoutes";
-import orderRoutes from "./routes/orderRoutes";
-import subscriptionRoutes from "./routes/subscriptionRoutes";
-import reviewRoutes from "./routes/reviewRoutes";
+import authRoutes from "./routes/authRoutes.js";
+import cookRoutes from "./routes/cookRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import menuRoutes from "./routes/menuRoutes.js";
+import orderRoutes from "./routes/orderRoutes.js";
+import subscriptionRoutes from "./routes/subscriptionRoutes.js";
+import reviewRoutes from "./routes/reviewRoutes.js";
 
 dotenv.config();
 connectDB();

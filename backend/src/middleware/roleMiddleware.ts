@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { IUser } from "../models/user";
+import { IUser } from "../models/user.js";
 
 const roleMiddleware = (...allowedRoles: IUser["role"][]) => {
   return (req: Request, res: Response, next: NextFunction) => {

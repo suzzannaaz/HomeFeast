@@ -7,10 +7,10 @@ import {
   resumeSubscription,
   getCookSubscriptions,
   updateSubscriptionStatus
-} from "../controllers/subscriptionController";
+} from "../controllers/subscriptionController.js";
 
-import { protect } from "../middleware/authMiddleware";
-import roleMiddleware from "../middleware/roleMiddleware";
+import { protect } from "../middleware/authMiddleware.js";
+import roleMiddleware from "../middleware/roleMiddleware.js";
 
 const router = express.Router();
 

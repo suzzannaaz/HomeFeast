@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import CookProfile from "../models/cookProfile";
-import User from "../models/user";
+import CookProfile from "../models/cookProfile.js";
+import User from "../models/user.js";
 
 
 /* Get all approved cooks (for users) */
