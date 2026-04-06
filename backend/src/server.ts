@@ -17,9 +17,23 @@ connectDB();
 
 const app = express();
 
+
+
+const allowedOrigins = [
+  "https://home-feast.vercel.app",
+  "https://home-feast-git-main-suzzan-naazs-projects.vercel.app",
+  "https://home-feast-hv2qxm1hi-suzzan-naazs-projects.vercel.app"
+];
+
 app.use(cors({
-  origin: "https://home-feast.vercel.app",
-  credentials: true,
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true); // allow Postman/browser direct
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error("CORS not allowed"));
+  },
+  credentials: true
 }));
 
 
