@@ -17,7 +17,10 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: "https://home-feast.vercel.app/",
+  credentials: true
+}));
 app.use(express.json());
 
 // Routes
