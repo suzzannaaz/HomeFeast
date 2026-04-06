@@ -35,7 +35,7 @@ export default function CookDetails() {
       if (!id) return;
       try {
         const token = localStorage.getItem("token");
-        const res = await fetch(`http://localhost:5000/api/users/cooks/${id}`, {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/cooks/${id}`, {
           headers: { Authorization: token ? `Bearer ${token}` : "" },
         });
         const cookData = await res.json();
