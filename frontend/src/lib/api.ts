@@ -1,63 +1,8 @@
-// Dummy API layer - replace base URL with your Express backend
-// const BASE = "/api";
 
-// async function request(endpoint: string, options: RequestInit = {}) {
-//   const token = localStorage.getItem("token");
-//   const headers: Record<string, string> = {
-//     "Content-Type": "application/json",
-//     ...(token ? { Authorization: `Bearer ${token}` } : {}),
-//     ...(options.headers as Record<string, string> || {}),
-//   };
-//   const res = await fetch(`${BASE}${endpoint}`, { ...options, headers });
-//   if (!res.ok) throw new Error(`API error: ${res.status}`);
-//   return res.json();
-// }
-
-// export const api = {
-//   auth: {
-//     login: (data: { email: string; password: string }) =>
-//       request("/auth/login", { method: "POST", body: JSON.stringify(data) }),
-//     register: (data: { name: string; email: string; password: string; role: string }) =>
-//       request("/auth/register", { method: "POST", body: JSON.stringify(data) }),
-//     profile: () => request("/auth/profile"),
-//     updateProfile: (data: Record<string, unknown>) =>
-//       request("/auth/profile", { method: "PUT", body: JSON.stringify(data) }),
-//   },
-//   cooks: {
-//     list: () => request("/cooks"),
-//     get: (id: string) => request(`/cooks/${id}`),
-//     approve: (id: string) => request(`/admin/cooks/${id}/approve`, { method: "PUT" }),
-//     reject: (id: string) => request(`/admin/cooks/${id}/reject`, { method: "PUT" }),
-//   },
-//   orders: {
-//     create: (data: Record<string, unknown>) =>
-//       request("/orders", { method: "POST", body: JSON.stringify(data) }),
-//     myOrders: () => request("/orders/my"),
-//     cookOrders: () => request("/orders/cook"),
-//     all: () => request("/orders"),
-//     accept: (id: string) => request(`/orders/${id}/accept`, { method: "PUT" }),
-//     reject: (id: string) => request(`/orders/${id}/reject`, { method: "PUT" }),
-//     deliver: (id: string) => request(`/orders/${id}/deliver`, { method: "PUT" }),
-//   },
-//   reviews: {
-//     create: (orderId: string, data: { rating: number; comment: string }) =>
-//       request(`/orders/${orderId}/review`, { method: "POST", body: JSON.stringify(data) }),
-//   },
-//   admin: {
-//     users: () => request("/admin/users"),
-//     blockUser: (id: string) => request(`/admin/users/${id}/block`, { method: "PUT" }),
-//     unblockUser: (id: string) => request(`/admin/users/${id}/unblock`, { method: "PUT" }),
-//     cooks: () => request("/admin/cooks"),
-//     orders: () => request("/admin/orders"),
-//   },
-// };
-
-
-const API = "http://localhost:5000/api";
 
 // Login API
 export const loginApi = async (email: string, password: string) => {
-  const res = await fetch(`${API}/auth/login`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
@@ -82,7 +27,7 @@ export const registerApi = async (userData: {
   deliveryTime?: string;
   cuisines?: string[];
 }) => {
-  const res = await fetch(`${API}/auth/register`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(userData),
@@ -97,7 +42,7 @@ export const registerApi = async (userData: {
 // Get cooks API
 export const getCooksApi = async () => {
   const token = localStorage.getItem("token");
-  const res = await fetch(`${API}/users/cooks`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/cooks`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -107,25 +52,11 @@ export const getCooksApi = async () => {
   return data;
 };
 
-// // create order
-// export const createOrderApi = async (token: string | null, cookId: string, planType: string, deliveryTime: string) => {
-//   const res = await fetch("http://localhost:5000/api/orders", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: token ? `Bearer ${token}` : "",
-//     },
-//     body: JSON.stringify({ cook: cookId, planType, deliveryTime }),
-//   });
 
-//   const data = await res.json();
-//   if (!res.ok) throw new Error(data.message || "Failed to create order");
-//   return data;
-// };
 
 //get order- user
 export const getUserOrdersApi = async (token: string) => {
-  const res = await fetch("http://localhost:5000/api/orders/my-orders", {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/my-orders`, {
     method: "GET", // Must be GET
     headers: {
       
@@ -139,7 +70,7 @@ export const getUserOrdersApi = async (token: string) => {
 
 // ✅ Cancel order
 export const cancelOrderApi = async (token: string, orderId: string) => {
-  const res = await fetch(`${API}/orders/${orderId}/cancel`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/${orderId}/cancel`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -158,7 +89,7 @@ export const createReviewApi = async (
   token: string,
   data: { cook: string; order: string; rating: number; comment: string }
 ) => {
-  const res = await fetch("http://localhost:5000/api/reviews", {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/reviews`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -176,7 +107,7 @@ export const createReviewApi = async (
 
 // lib/api.ts
 export const getReviewedOrderIdsApi = async (token: string) => {
-  const res = await fetch(`${API}/reviews/my-reviewed-orders`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/reviews/my-reviewed-orders`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error("Failed to fetch reviewed orders");
@@ -184,10 +115,10 @@ export const getReviewedOrderIdsApi = async (token: string) => {
 };
 
 
-const BASE_URL = "http://localhost:5000/api";
+
 // ✅ Get profile
 export const getMyProfileApi = async (token: string) => {
-  const res = await fetch(`${BASE_URL}/users/profile`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/profile`, {
     headers: {
       Authorization: `Bearer ${token}`,
     },
@@ -204,7 +135,7 @@ export const updateProfileApi = async (
   token: string,
   data: { name: string; email: string; location?: string }
 ) => {
-  const res = await fetch(`${BASE_URL}/users/profile`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/profile`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -224,37 +155,12 @@ export const updateProfileApi = async (
 export const getMenusByCookApi = async (cookId: string) => {
   const token = localStorage.getItem("token");
 
-  const res = await fetch(`${API}/menus/cook/${cookId}`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/menus/cook/${cookId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
   return res.json();
 };
-
-// // ✅ Create subscription
-// export const createSubscriptionApi = async (data: {
-//   cook: string;
-//   planType: string;
-//   deliveryTime: string;
-// }) => {
-//   const token = localStorage.getItem("token");
-
-//   const res = await fetch(`${API}/subscriptions`, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//       Authorization: `Bearer ${token}`,
-//     },
-//     body: JSON.stringify(data),
-//   });
-
-//   const result = await res.json();
-//   if (!res.ok) throw new Error(result.message);
-
-//   return result;
-// };
-
-
 
 // ✅ Create One-time Order (Trial/Daily)
 export const createOrderApi = async (
@@ -264,7 +170,7 @@ export const createOrderApi = async (
   deliveryTime: string,
   date: string,
 ) => {
-  const res = await fetch(`${API}/orders`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -292,7 +198,7 @@ export const createSubscriptionApi = async (data: {
 }) => {
   const token = localStorage.getItem("token");
 
-  const res = await fetch(`${API}/subscriptions`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/subscriptions`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -311,7 +217,7 @@ export const createSubscriptionApi = async (data: {
 export const getSubscriptionsApi = async () => {
   const token = localStorage.getItem("token");
 
-  const res = await fetch(`${API}/subscriptions`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/subscriptions`, {
     headers: { Authorization: `Bearer ${token}` },
   });
 
@@ -322,7 +228,7 @@ export const getSubscriptionsApi = async () => {
 export const pauseSubscriptionApi = async (id: string) => {
   const token = localStorage.getItem("token");
 
-  return fetch(`${API}/subscriptions/${id}/pause`, {
+  return fetch(`${import.meta.env.VITE_API_URL}/api/subscriptions/${id}/pause`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -332,7 +238,7 @@ export const pauseSubscriptionApi = async (id: string) => {
 export const cancelSubscriptionApi = async (id: string) => {
   const token = localStorage.getItem("token");
 
-  return fetch(`${API}/subscriptions/${id}/cancel`, {
+  return fetch(`${import.meta.env.VITE_API_URL}/api/subscriptions/${id}/cancel`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -342,7 +248,7 @@ export const cancelSubscriptionApi = async (id: string) => {
 export const resumeSubscriptionApi = async (id: string) => {
   const token = localStorage.getItem("token");
 
-  const res = await fetch(`${API}/subscriptions/${id}/resume`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/subscriptions/${id}/resume`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -359,7 +265,7 @@ export const resumeSubscriptionApi = async (id: string) => {
 export const filterCooksApi = async (params: any) => {
   const query = new URLSearchParams(params).toString();
 
-  const res = await fetch(`${API}/cook/filter?${query}`);
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/cook/filter?${query}`);
 
   const data = await res.json();
   if (!res.ok) throw new Error(data.message || "Failed to fetch cooks");
@@ -368,10 +274,10 @@ export const filterCooksApi = async (params: any) => {
 };
 
 
-const COOK_URL = "http://localhost:5000/api/cook";
+// const COOK_URL = "http://localhost:5000/api/cook";
 
 export const getMyCookProfileApi = async (token: string) => {
-  const res = await fetch(`${COOK_URL}/me`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/cook/me`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (res.status === 404) return null; // Important for checking if profile exists
@@ -380,7 +286,7 @@ export const getMyCookProfileApi = async (token: string) => {
 };
 
 export const createCookProfileApi = async (token: string, data: any) => {
-  const res = await fetch(`${COOK_URL}/`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/cook`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -394,7 +300,7 @@ export const createCookProfileApi = async (token: string, data: any) => {
 };
 
 export const updateCookProfileApi = async (token: string, data: any) => {
-  const res = await fetch(`${COOK_URL}/me`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/cook/me`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -409,10 +315,10 @@ export const updateCookProfileApi = async (token: string, data: any) => {
 
 
 
-const MENU_URL = "http://localhost:5000/api/menus";
+// const MENU_URL = "http://localhost:5000/api/menus";
 
 export const createMenuApi = async (token: string, data: any) => {
-  const res = await fetch(`${MENU_URL}/`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/menus`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -424,7 +330,7 @@ export const createMenuApi = async (token: string, data: any) => {
 };
 
 export const updateMenuApi = async (token: string, id: string, data: any) => {
-  const res = await fetch(`${MENU_URL}/${id}`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/menus/${id}`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -436,17 +342,17 @@ export const updateMenuApi = async (token: string, id: string, data: any) => {
 };
 
 export const deleteMenuApi = async (token: string, id: string) => {
-  const res = await fetch(`${MENU_URL}/${id}`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/menus/${id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.json();
 };
 
-const ORDER_URL = "http://localhost:5000/api/orders";
+// const ORDER_URL = "http://localhost:5000/api/orders";
 
 export const getCookOrdersApi = async (token: string) => {
-  const res = await fetch(`${ORDER_URL}/cook-orders`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/cook-orders`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error("Failed to fetch orders");
@@ -454,7 +360,7 @@ export const getCookOrdersApi = async (token: string) => {
 };
 
 export const updateOrderStatusApi = async (token: string, orderId: string, action: 'accept' | 'reject' | 'delivered') => {
-  const res = await fetch(`${ORDER_URL}/${orderId}/${action}`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/${orderId}/${action}`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -462,17 +368,17 @@ export const updateOrderStatusApi = async (token: string, orderId: string, actio
   return res.json();
 };
 
-const SUB_URL = "http://localhost:5000/api/subscriptions";
+// const SUB_URL = "http://localhost:5000/api/subscriptions";
 
 export const getCookSubscriptionsApi = async (token: string) => {
-  const res = await fetch(`${SUB_URL}/cook`, { // You'll need to add this route in Express
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/subscriptions/cook`, { // You'll need to add this route in Express
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.json();
 };
 
 export const updateSubStatusApi = async (token: string, id: string, status: string) => {
-  const res = await fetch(`${SUB_URL}/${id}/status`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/subscriptions/${id}/status`, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -483,11 +389,11 @@ export const updateSubStatusApi = async (token: string, id: string, status: stri
   return res.json();
 };
 
-const REVIEW_URL = "http://localhost:5000/api/reviews";
+// const REVIEW_URL = "http://localhost:5000/api/reviews";
 
 // Get reviews specifically for the logged-in cook
 export const getMyReviewsApi = async (token: string) => {
-  const res = await fetch(`http://localhost:5000/api/reviews/my-reviews`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/reviews/my-reviews`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.json();
@@ -495,7 +401,7 @@ export const getMyReviewsApi = async (token: string) => {
 
 // Get the star summary (Average + Total)
 export const getMyRatingSummaryApi = async (token: string) => {
-  const res = await fetch(`http://localhost:5000/api/reviews/my-rating`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/reviews/my-rating`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   return res.json();
@@ -506,7 +412,7 @@ export const getMyRatingSummaryApi = async (token: string) => {
 
 // Get all cooks
 export const getAllCooksApi = async (token: string) => {
-  const res = await fetch(`${API}/admin/cooks`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/cooks`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error("Failed to fetch cooks");
@@ -515,7 +421,7 @@ export const getAllCooksApi = async (token: string) => {
 
 // Approve cook
 export const approveCookApi = async (token: string, id: string) => {
-  const res = await fetch(`${API}/admin/cooks/${id}/approve`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/cooks/${id}/approve`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -525,7 +431,7 @@ export const approveCookApi = async (token: string, id: string) => {
 
 // Reject cook
 export const rejectCookApi = async (token: string, id: string) => {
-  const res = await fetch(`${API}/admin/cooks/${id}/reject`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/cooks/${id}/reject`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -535,7 +441,7 @@ export const rejectCookApi = async (token: string, id: string) => {
 
 // Get all users
 export const getAllUsersApi = async (token: string) => {
-  const res = await fetch(`${API}/admin/users`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error("Failed to fetch users");
@@ -544,7 +450,7 @@ export const getAllUsersApi = async (token: string) => {
 
 // Delete user
 export const deleteUserApi = async (token: string, id: string) => {
-  const res = await fetch(`${API}/admin/users/${id}`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users/${id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -554,7 +460,7 @@ export const deleteUserApi = async (token: string, id: string) => {
 
 // Block/Unblock user
 export const toggleBlockUserApi = async (token: string, id: string) => {
-  const res = await fetch(`${API}/admin/users/${id}/block`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/users/${id}/block`, {
     method: "PUT",
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -564,7 +470,7 @@ export const toggleBlockUserApi = async (token: string, id: string) => {
 
 // Get all orders
 export const getAllOrdersApi = async (token: string) => {
-  const res = await fetch(`${API}/admin/orders`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/orders`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error("Failed to fetch orders");
@@ -573,7 +479,7 @@ export const getAllOrdersApi = async (token: string) => {
 
 // Get orders by status (optional)
 export const getOrdersByStatusApi = async (token: string, status: string) => {
-  const res = await fetch(`${API}/admin/orders/${status}`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/orders/${status}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error("Failed to fetch orders by status");
@@ -582,7 +488,7 @@ export const getOrdersByStatusApi = async (token: string, status: string) => {
 
 // Get admin dashboard stats
 export const getAdminStatsApi = async (token: string) => {
-  const res = await fetch(`${API}/admin/stats`, { // Create this backend route
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/stats`, { // Create this backend route
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error("Failed to fetch stats");
@@ -591,7 +497,7 @@ export const getAdminStatsApi = async (token: string) => {
 
 // Get all subscriptions
 export const getAllSubscriptionsApi = async (token: string) => {
-  const res = await fetch(`${API}/admin/subscriptions`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/subscriptions`, {
     headers: { Authorization: `Bearer ${token}` },
   });
   if (!res.ok) throw new Error("Failed to fetch subscriptions");
@@ -600,7 +506,7 @@ export const getAllSubscriptionsApi = async (token: string) => {
 
 // Update subscription status
 export const updateSubscriptionStatusApi = async (token: string, id: string, status: string) => {
-  const res = await fetch(`${API}/admin/subscriptions/${id}/status`, {
+  const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/subscriptions/${id}/status`, {
     method: "PUT",
     headers: { 
       "Content-Type": "application/json",
@@ -612,22 +518,3 @@ export const updateSubscriptionStatusApi = async (token: string, id: string, sta
   return res.json();
 };
 
-// export const approveCookApi = async (id: string) => {
-//   const token = localStorage.getItem("token");
-//   const res = await fetch(`http://localhost:5000/api/admin/cooks/${id}/approve`, {
-//     method: "PUT",
-//     headers: { Authorization: `Bearer ${token}` },
-//   });
-//   if (!res.ok) throw new Error("Failed to approve cook");
-//   return res.json();
-// };
-
-// export const rejectCookApi = async (id: string) => {
-//   const token = localStorage.getItem("token");
-//   const res = await fetch(`http://localhost:5000/api/admin/cooks/${id}/reject`, {
-//     method: "PUT",
-//     headers: { Authorization: `Bearer ${token}` },
-//   });
-//   if (!res.ok) throw new Error("Failed to reject cook");
-//   return res.json();
-// };

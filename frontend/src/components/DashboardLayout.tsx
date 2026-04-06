@@ -57,30 +57,3 @@ return (
 );
 }
 
-// return (
-  //   <SidebarProvider>
-  //     <div className="min-h-screen flex w-full">
-  //       <AppSidebar />
-  //       <div className="flex-1 flex flex-col min-w-0">
-  //         <header className="h-14 flex items-center justify-between gap-4 border-b px-6 bg-gradient-to-r from-background to-muted/40 backdrop-blur supports-[backdrop-filter]:bg-background/70 sticky top-0 z-10">
-  
-  //         <div className="flex items-center gap-3">
-  //           <SidebarTrigger />
-  //           <h1 className="font-display text-lg font-semibold tracking-tight">
-  //             HomeFeast Dashboard
-  //           </h1>
-  //         </div>
-
-  //         <div className="text-sm text-muted-foreground hidden sm:block">
-  //           Welcome back 👋
-  //         </div>
-
-  //       </header>
-  //         <main className="flex-1 p-6 md:p-8 bg-muted/30 overflow-auto">
-  //           <Outlet />
-  //         </main>
-  //       </div>
-  //     </div>
-  //   </SidebarProvider>
-  // );
-
